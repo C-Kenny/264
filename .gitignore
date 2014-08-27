@@ -1,3 +1,4 @@
 .Python
 env/
-.swp
+*.swp
+__pycache__/
