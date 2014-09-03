@@ -13,7 +13,8 @@ def efficiency(data_size, num_transmissions, message_len):
     return data_size / (num_transmissions * message_len)
 
 
-def average_efficiency(efficiencies: list):
+#def average_efficiency(efficiencies: list):
+def average_efficiency(efficiencies):
     return sum(efficiencies) / len(efficiencies)
 
 
@@ -41,9 +42,22 @@ if __name__ == "__main__":
         -p bit error probability
         -r number of redundant bits n-k
     '''
-    data_size = argv[argv.index("-u") + 1]
-    error_rate = argv[argv.index("-p") + 1]
-    redundant_bits = argv[argv.index("-r") + 1]
+
+    if len(argv) > 1:
+        data_size = int(argv[argv.index("-u") + 1])
+        error_rate = float(argv[argv.index("-p") + 1])
+        redundant_bits = int(argv[argv.index("-r") + 1])
+        k = data_size + 100   # 100 is overhead
+        packet_size = k + redundant_bits   # encoding process
+
+    else:   # interactive mode
+        data_size = int(input("Data size (int): "))
+        error_rate = float(input("Independent bit probability error (float): "))
+        redundant_bits = int(input("Redundant bit size (int):"))
+        k = data_size + 100   # 100 is overhead
+        packet_size = k + redundant_bits   # encoding process
+
     print(data_size, error_rate, redundant_bits)
 
     num_simulations = 10 ** 6
+    simulate(num_simulations, error_rate, packet_size, k)

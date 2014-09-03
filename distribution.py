@@ -7,5 +7,5 @@ bit errors of a BSC.
 from numpy.random import binomial
 
 
-def num_errors(message_len: int, error_rate: float):
+def num_errors(message_len, error_rate):
     return binomial(message_len, error_rate)
