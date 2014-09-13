@@ -13,7 +13,8 @@ def efficiency(data_size, num_transmissions, message_len):
     return data_size / (num_transmissions * message_len)
 
 
-def average_efficiency(efficiencies: list):
+#def average_efficiency(efficiencies: list):
+def average_efficiency(efficiencies):
     return sum(efficiencies) / len(efficiencies)
 
 
@@ -51,13 +52,20 @@ if __name__ == "__main__":
     overhead = 100
     num_simulations = 10 ** 6
 
-    user_data = int(argv[argv.index("-u") + 1])
-    error_rate = float(argv[argv.index("-p") + 1])
-    redundant_bits = int(argv[argv.index("-r") + 1])
+    # Get simulation Parameters
+    if len(argv) > 1:
+        user_data = int(argv[argv.index("-u") + 1])
+        error_rate = float(argv[argv.index("-p") + 1])
+        redundant_bits = int(argv[argv.index("-r") + 1])
+
+    else:   # Interactive Mode
+        user_data = int(input("Data size (int): "))
+        error_rate = float(input("Independent bit probability error (float): "))
+        redundant_bits = int(input("Redundant bit size (int):"))
+
     message_len = user_data + overhead + redundant_bits
 
-    print(user_data, error_rate, redundant_bits)
-
-    average_efficiency = simulate(num_simulations, error_rate, user_data, message_len)
+    average_efficiency = simulate(num_simulations, error_rate,
+                                  user_data, message_len)
 
     print(average_efficiency)
