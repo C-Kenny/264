@@ -12,7 +12,7 @@ def hamming_bound(n, k):
     # n bits long.
 
     exp = 2 ** (n - k)  # n - k, number of redundant bits
-    print("exp = ", exp)
+#    print("exp = ", exp)
     binom_sum = 0
 
     i = 0
