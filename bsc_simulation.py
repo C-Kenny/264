@@ -7,13 +7,13 @@ Simulates a BSC, modelled using a binomial distribution.
 import hamming
 import distribution
 from sys import argv
+import numpy as np
 
 
 def efficiency(data_size, num_transmissions, message_len):
     return data_size / (num_transmissions * message_len)
 
 
-#def average_efficiency(efficiencies: list):
 def average_efficiency(efficiencies):
     return sum(efficiencies) / len(efficiencies)
 
@@ -38,8 +38,22 @@ def simulate(num_simulations, error_rate, user_data, message_len):
 
         total_submissions += num_transmissions
 
-    print(total_submissions)
+    ##print(total_submissions)
     return average_efficiency(efficiencies)
+
+
+def multi_sim(prob_min, prob_max, prob_step, num_sims, user_data, mess_len):
+    '''
+    Perform multiple simulations.
+    '''
+    avg_efficiencies = []
+    error_rates = np.arange(prob_min, prob_max, prob_step)
+
+    for error in error_rates:
+        avg_efficiencies.append(simulate(num_sims, error, user_data, mess_len))
+
+    print(len(avg_efficiencies), len(error_rates))
+    return error_rates, avg_efficiencies
 
 
 if __name__ == "__main__":
