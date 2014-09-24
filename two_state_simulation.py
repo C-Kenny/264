@@ -17,30 +17,34 @@ def efficiency(data_size, num_transmissions, message_len):
 def average_efficiency(efficiencies):
     return sum(efficiencies) / len(efficiencies)
 
+def get_state(previous_state_good):
+
+    new_state = None
+
+    p_gg = 0.9
+    p_bb = 0.9
+
+    # Gen random number
+    random_number = numpy.random.uniform()  # q
+
+    if previous_state_good:
+        if random_number >= p_gg:
+            new_state = False
+
+    else: 
+        if random_number >= p_bb:
+            new_state = True
+
+    return new_state
+
 
 def simulate(num_simulations, error_rate_g, error_rate_b, user_data, message_len):
     efficiencies = []
     k = user_data + 100
     total_submissions = 0
     previous_state_good = True # arbitarily defined, n-1 state
+    error_rate = error_rate_g
     for _ in range(num_simulations):
-
-        # Send one package
-        random_number = numpy.random.uniform()  # q
-
-        if previous_state_good == True:
-            if random_number < error_rate_g:    
-                error_rate = error_rate_g
-            else:
-                error_rate = error_rate_b
-                previous_state_good = False
-
-        else: 
-            if random_number < error_rate_b:
-                error_rate = error_rate_b
-            else:
-                error_rate = error_rate_g
-                previous_state_good = True
 
         num_errors = distribution.num_errors(message_len, error_rate)
         bound = hamming.hamming_bound(message_len, k)
@@ -48,12 +52,19 @@ def simulate(num_simulations, error_rate_g, error_rate_b, user_data, message_len
         # While not successful
         num_transmissions = 1
 
-        while num_errors < bound:
+        while num_errors > bound:
             num_errors = distribution.num_errors(message_len, error_rate)
             num_transmissions += 1
-            print("Number errors: ", num_errors)
-            print("Efficiencies: ", efficiencies)
-            print("Submissions ", total_submissions)
+
+            # Update State
+            current_state_good = get_state(previous_state_good)
+
+            if current_state_good:
+                error_rate = error_rate_g
+            else:
+                error_rate = error_rate_b
+
+            previous_state_good = current_state_good
 
 
         efficiencies.append(efficiency(k, num_transmissions, message_len))
@@ -87,8 +98,7 @@ if __name__ == "__main__":
         -r number of redundant bits n-k
     '''
     overhead = 100
-    num_simulations = 10 ** 2
-
+    num_simulations = 10
     # Get simulation Parameters
     if len(argv) > 1:
         user_data = int(argv[argv.index("-u") + 1])

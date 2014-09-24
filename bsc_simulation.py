@@ -38,22 +38,27 @@ def simulate(num_simulations, error_rate, user_data, message_len):
 
         total_submissions += num_transmissions
 
-    ##print(total_submissions)
+#    #print(total_submissions)
     return average_efficiency(efficiencies)
 
 
-def multi_sim(prob_min, prob_max, prob_step, num_sims, user_data, mess_len):
+def prob_sim(prob_min, prob_max, prob_step, num_sims, user_data):
     '''
     Perform multiple simulations.
     '''
     avg_efficiencies = []
     error_rates = np.arange(prob_min, prob_max, prob_step)
 
+    # Calculate redundant bits
+    redundant_bits = int(np.ceil((user_data + 100) * 0.1))
+    mess_len = redundant_bits + user_data
+
     for error in error_rates:
         avg_efficiencies.append(simulate(num_sims, error, user_data, mess_len))
 
-    print(len(avg_efficiencies), len(error_rates))
+#    print(len(avg_efficiencies), len(error_rates))
     return error_rates, avg_efficiencies
+
 
 
 if __name__ == "__main__":
