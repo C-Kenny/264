@@ -17,6 +17,8 @@ def plot_simulation(x1, y1, dest_name, xlabel, ylabel, x2=None, y2=None, line1_l
     plt.ylabel(ylabel)
     plt.xlabel(xlabel)
 
+
+
     if x2 is None and y2 is None:
         # Draw graph
         line1, = plt.plot(x1, y1)
@@ -30,10 +32,12 @@ def plot_simulation(x1, y1, dest_name, xlabel, ylabel, x2=None, y2=None, line1_l
         plt.legend([line1, line2], [line1_label, line2_label])
 
     plt.savefig(dest_name)
+    plt.close()
 #    plt.show()
 
 
 def question_three():
+    print("in q 3")
     # Q3 | BSC, where p = 0.001 and p = 0.01
     p_ten = 0.01
     p_ten_container = []
@@ -47,14 +51,19 @@ def question_three():
         n = data + 100
         check_bits = ceil(.1 * n)
         k = n + check_bits
+#        print(check_bits,data, n, k)
         p_ten_container.append(
             bsc_simulation.simulate(10**6, p_ten, data, check_bits))
 
+    for data in user_data:
+        print("plotting 100s")
+        n = data + 100
+        check_bits = ceil(.1 * n)
+        k = n + check_bits
         p_hund_container.append(
             bsc_simulation.simulate(10**6, p_hund, data, check_bits))
-        print(data)
 
-
+#    print(p_hund_container)
     plot_simulation(user_data, p_ten_container,
                     dest_name="img/q3.png", xlabel="u", ylabel="Average Efficiency",
                     line1_label="p=0.01", line2_label="p=0.001",
@@ -64,19 +73,19 @@ def question_three():
 def question_four():
     # Q4 | Plot BSC with varying effs
     u = 512
-    check_bits = ceil(0.1 * (u + 100))
     p_min = 0.0001
     p_max = 0.01
     p_step = 0.0002
     num_sims = 10 ** 6
 
-    (p, efficiencies) = bsc_simulation.prob_sim(p_min, p_max, p_step, num_sims, check_bits)
+    (p, efficiencies) = bsc_simulation.prob_sim(p_min, p_max, p_step, num_sims, u)
+    print(p, efficiencies)
     print("Finished BSC Simulation")
     plot_simulation(p, efficiencies, dest_name="img/q4.png", xlabel='p', ylabel='Average Efficiency')
 
 def question_five():
     # Q5 | Two State Simulation
-    pg = (10)**(-3)
+    pg = (10)**(-5)
     pb = (1.99)*(10**-3)
     user_data = 1024
     two_state_efficiencies = []
@@ -85,12 +94,10 @@ def question_five():
     bit_range = range(0, 510, 10)
     for check_bits in bit_range:
         two_state_efficiencies.append(two_state_simulation.simulate(10**6, pg, pb, user_data, check_bits))
-        print("Finished two state")
         bsc_efficiencies.append(bsc_simulation.simulate(10**6, 10**-3, user_data, check_bits))
-        print("Finished bsc")
 
     plot_simulation(bit_range, two_state_efficiencies, x2=bit_range, y2=bsc_efficiencies,
-                    xlabel="p-k", ylabel="Average Efficiency", line1_label="Two State Channel",
+                    xlabel="n-k", ylabel="Average Efficiency", line1_label="Two State Channel",
                     line2_label="BSC Channel", dest_name="img/q5.png")
 
 if __name__ == "__main__":
@@ -99,12 +106,26 @@ if __name__ == "__main__":
         -q3
         -q4
         -q5
+        -all
     '''
 
     if len(argv) > 1:
         question = argv[1]
-        print(argv)
-        question_three() if question == "-q3" else question_four() if question == "-q4" else question_five()
+
+        if question == "-q3":
+            question_three()
+
+        elif question == "-q4":
+            question_four()
+
+        elif question == "-q5":
+            question_five()
+
+        elif question == "-all":
+            question_three()
+            question_four()
+            question_five()
+
     else:
         question = input("Enter '-q3' or '-q4' or '-q5' *It will default to q5 with incorrect input")
         question_three() if question == "-q3" else question_four() if question == "-q4" else question_five()

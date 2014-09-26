@@ -23,8 +23,8 @@ def simulate(num_simulations, error_rate, user_data, redundant_bits):
     k = 100 + user_data
     message_len = k + redundant_bits
     total_submissions = 0
+    num_transmissions = 0
     bound = hamming.hamming_bound(message_len, k)
-#    print(user_data, k, message_len, redundant_bits, bound)
 
     for _ in range(num_simulations):
 
@@ -34,14 +34,13 @@ def simulate(num_simulations, error_rate, user_data, redundant_bits):
         # While not successful
         num_transmissions = 1
         while num_errors > bound:
-#            print(bound, num_errors, message_len, error_rate)
             num_errors = distribution.num_errors(message_len, error_rate)
-
-        efficiencies.append(efficiency(k, num_transmissions, message_len))
+            num_transmissions += 1
+        eff = efficiency(user_data, num_transmissions, message_len)
+        efficiencies.append(eff)
 
         total_submissions += num_transmissions
 
-#    #print(total_submissions)
     return average_efficiency(efficiencies)
 
 
@@ -54,7 +53,6 @@ def prob_sim(prob_min, prob_max, prob_step, num_sims, user_data):
 
     # Calculate redundant bits
     redundant_bits = int(np.ceil((user_data + 100) * 0.1))
-    mess_len = redundant_bits + user_data
 
     for error in error_rates:
         avg_efficiencies.append(simulate(num_sims, error, user_data, redundant_bits))

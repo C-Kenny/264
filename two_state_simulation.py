@@ -27,15 +27,19 @@ def get_state(previous_state_good):
     # Gen random number
     random_number = numpy.random.uniform()  # q
 
+
     if previous_state_good:
         if random_number >= p_gg:
             new_state = False
 
-    else:
+    elif not previous_state_good:
         if random_number >= p_bb:
             new_state = True
 
-    return new_state
+    if new_state is not None:
+        return new_state
+    else:
+        return previous_state_good
 
 
 def get_error_rate(current_state_good, error_rate_g, error_rate_b):
@@ -56,16 +60,28 @@ def simulate(num_simulations, error_rate_g, error_rate_b, user_data, redundant_b
     efficiencies = []
     total_submissions = 0
 
-    previous_state_good = True  # arbitarily defined, n-1 state
+    previous_state_good = False  # arbitarily defined, n-1 state
     error_rate = error_rate_g
     bound = hamming.hamming_bound(message_len, k)
 
-    num_toggles = 0
+    run = 1
+    runs = []
 
     for _ in range(num_simulations):
 
         # Send initial packet
         num_errors = distribution.num_errors(message_len, error_rate)
+
+        # Update channel state
+        current_state_good = get_state(previous_state_good)
+        error_rate = get_error_rate(current_state_good, error_rate_g, error_rate_b)
+        if current_state_good == previous_state_good:
+            run += 1
+        else:
+            runs.append(run)
+            run = 1
+
+        previous_state_good = current_state_good
 
         # Resend until all errors can be corrected
         num_transmissions = 1
@@ -76,25 +92,30 @@ def simulate(num_simulations, error_rate_g, error_rate_b, user_data, redundant_b
             # Update channel state
             current_state_good = get_state(previous_state_good)
             error_rate = get_error_rate(current_state_good, error_rate_g, error_rate_b)
-            if current_state_good != previous_state_good:
-                num_toggles += 1
+
+            if current_state_good == previous_state_good:
+                run += 1
+            else:
+                runs.append(run)
+                run = 1
+
             previous_state_good = current_state_good
 
-        efficiencies.append(efficiency(k, num_transmissions, message_len))
+        efficiencies.append(efficiency(user_data, num_transmissions, message_len))
         total_submissions += num_transmissions
 
-    print(num_toggles)
-    print(total_submissions)
-    return average_efficiency(efficiencies)
+    print(numpy.average(runs))
+#    print(total_submissions)
+    return numpy.average(efficiencies)
 
-def interactiveMode():
-    """ Gets required data from standard input. """
+def interactivemode():
+    """ gets required data from standard input. """
 
-    print(">>> Two-State Channel Simulation")
-    user_data = int(input("Data size (int): "))
-    print("You will now be asked to enter the probabilities for a 'good' & 'bad' state, please make pb >> pg")
-    error_rate_g = float(input("Independent bit probability error (pg): "))
-    error_rate_b = float(input("Independent bit probability error (pb): "))
+    print(">>> two-state channel simulation")
+    user_data = int(input("data size (int): "))
+    print("you will now be asked to enter the probabilities for a 'good' & 'bad' state, please make pb >> pg")
+    error_rate_g = float(input("independent bit probability error (pg): "))
+    error_rate_b = float(input("independent bit probability error (pb): "))
     if error_rate_g > error_rate_b:
         print("Invalid bit probability rates. pb must be larger than pg\n--RESTARTING NOW--\n")
         interactiveMode()

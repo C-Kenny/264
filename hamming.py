@@ -3,6 +3,7 @@
 Calculate the hamming bound of a k bit code.
 '''
 from scipy.special import binom
+from math import log
 
 binom_sums = {}
 
@@ -28,3 +29,8 @@ def hamming_bound(n, k):
         i += 1
 
     return i
+
+if __name__ == '__main__':
+    n = 2310
+    k = 2100
+    print(hamming_bound(n,k))

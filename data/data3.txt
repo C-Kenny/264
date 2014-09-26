@@ -1,0 +1,8 @@
+['plot_CLI.py', '-q3']
+Question is -q3
+in 3
+Simulate 10s
+Simulate 100s
+Simulate 10s
+Simulate 100s
+Simulate 10s
