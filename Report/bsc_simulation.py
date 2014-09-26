@@ -1,5 +1,3 @@
-#!/Users/dtg/Dropbox/UC_2014/S2/264/env/bin/python
-
 '''
 Simulates a BSC, modelled using a binomial distribution.
 '''

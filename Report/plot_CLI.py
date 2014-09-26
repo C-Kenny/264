@@ -66,7 +66,8 @@ def question_three():
 
 #    print(p_hund_container)
     plot_simulation(user_data, p_ten_container,
-                    dest_name="img/q3.png", xlabel="u", ylabel="Average Efficiency",
+                    dest_name="img/q3.png", xlabel="u",
+                    ylabel="Average Efficiency",
                     line1_label="p=0.01", line2_label="p=0.001",
                     x2=user_data, y2=p_hund_container)
 
@@ -79,7 +80,8 @@ def question_four():
     p_step = 0.0002
     num_sims = 10 ** 6
 
-    (p, efficiencies) = bsc_simulation.prob_sim(p_min, p_max, p_step, num_sims, u)
+    (p, efficiencies) = bsc_simulation.prob_sim(p_min, p_max, p_step,
+                                                num_sims, u)
     print(p, efficiencies)
     print("Finished BSC Simulation")
     plot_simulation(p, efficiencies, dest_name="img/q4.png",
@@ -100,8 +102,9 @@ def question_five():
         bsc_efficiencies.append(bsc_simulation.simulate(10**6, 10**-3,
                                                         user_data, check_bits))
 
-    plot_simulation(bit_range, two_state_efficiencies, x2=bit_range, 
-                    y2=bsc_efficiencies, xlabel="n-k", ylabel="Average Efficiency",
+    plot_simulation(bit_range, two_state_efficiencies, x2=bit_range,
+                    y2=bsc_efficiencies, xlabel="n-k",
+                    ylabel="Average Efficiency",
                     line1_label="Two State Channel",
                     line2_label="BSC Channel", dest_name="img/q5.png")
 
