@@ -13,9 +13,9 @@ from sys import argv
 def efficiency(data_size, num_transmissions, message_len):
     return data_size / (num_transmissions * message_len)
 
-
 def average_efficiency(efficiencies):
     return sum(efficiencies) / len(efficiencies)
+
 
 def get_state(previous_state_good):
 
@@ -31,45 +31,59 @@ def get_state(previous_state_good):
         if random_number >= p_gg:
             new_state = False
 
-    else: 
+    else:
         if random_number >= p_bb:
             new_state = True
 
     return new_state
 
 
-def simulate(num_simulations, error_rate_g, error_rate_b, user_data, message_len):
-    efficiencies = []
+def get_error_rate(current_state_good, error_rate_g, error_rate_b):
+
+    if current_state_good:
+        error_rate = error_rate_g
+    else:
+        error_rate = error_rate_b
+
+    return error_rate
+
+
+def simulate(num_simulations, error_rate_g, error_rate_b, user_data, redundant_bits):
+
     k = user_data + 100
+    message_len = k + redundant_bits
+
+    efficiencies = []
     total_submissions = 0
-    previous_state_good = True # arbitarily defined, n-1 state
+
+    previous_state_good = True  # arbitarily defined, n-1 state
     error_rate = error_rate_g
+    bound = hamming.hamming_bound(message_len, k)
+
+    num_toggles = 0
+
     for _ in range(num_simulations):
 
+        # Send initial packet
         num_errors = distribution.num_errors(message_len, error_rate)
-        bound = hamming.hamming_bound(message_len, k)
 
-        # While not successful
+        # Resend until all errors can be corrected
         num_transmissions = 1
-
         while num_errors > bound:
             num_errors = distribution.num_errors(message_len, error_rate)
             num_transmissions += 1
 
-            # Update State
+            # Update channel state
             current_state_good = get_state(previous_state_good)
-
-            if current_state_good:
-                error_rate = error_rate_g
-            else:
-                error_rate = error_rate_b
-
+            error_rate = get_error_rate(current_state_good, error_rate_g, error_rate_b)
+            if current_state_good != previous_state_good:
+                num_toggles += 1
             previous_state_good = current_state_good
-
 
         efficiencies.append(efficiency(k, num_transmissions, message_len))
         total_submissions += num_transmissions
 
+    print(num_toggles)
     print(total_submissions)
     return average_efficiency(efficiencies)
 

@@ -17,11 +17,13 @@ def hamming_bound(n, k):
 
     i = 0
     while binom_sum < exp:
-        if (n, i) in binom_sums:
+        if (n, i) not in binom_sums:
+            binom_sums[(n, i)] = binom(n, i)
+
+        if binom_sum + binom_sums[(n, i)] <= exp:
             binom_sum += binom_sums[(n, i)]
         else:
-            binom_sums[(n, i)] = binom(n, i)
-            binom_sum += binom(n, i)
+            break
 
         i += 1
 
