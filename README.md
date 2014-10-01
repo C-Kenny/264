@@ -1,14 +1,6 @@
-##264##
+####COSC264 | BSC and Two-State Channel Simulator
 
 
-**To-Do**
+**Project:** Combine properties of error-correcting codes with retransmission protocols and determine the efficiency of different protocol configurations, see full assignment spec [here.](https://github.com/C-Kenny/264/blob/master/264-assignment.pdf)
 
-~~1. 15th August 3:30 - Meeting~~
-  2. Check hamming bound code is working correctly (probably isn't just did a quick pass through)
-  3. Write a simulation script.
-  4. Plot output from simulation.
-  5. Get latex scaffolding set up.
-
-**Ideas:**
-
-**Links:**
+**Write-up:** The completed write-up can be found [here] (https://github.com/C-Kenny/264/blob/master/Report/Report_draft.pdf)
