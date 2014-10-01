@@ -1,31 +1,33 @@
+ #!/usr/bin/python3
+
 '''
-Plotting utility for COSC264 Assignment.
-Plots p on the x-axis and average efficency on the y-axis.
+Authors:    Dillon George and Carl Kenny
+Program:    Plots p on the x-axis and average efficency on the y-axis.
 '''
 
 import matplotlib.pyplot as plt
 from numpy import ceil
 from sys import argv
 
-
 import bsc_simulation
 import two_state_simulation
 
 def plot_simulation(x1, y1, dest_name, xlabel, ylabel, x2=None, y2=None,
                     line1_label=None, line2_label=None):
+    """ Plots simulation, the second line (x2, y2) is optional """
 
-    # Label axis
+    # Label axes
     plt.ylabel(ylabel)
     plt.xlabel(xlabel)
 
 
 
     if x2 is None and y2 is None:
-        # Draw graph
+        # Draw single line graph
         line1, = plt.plot(x1, y1)
 
     else:
-        # Draw graph
+        # Draw multi-line graph
         line1, = plt.plot(x1, y1)
         line2, = plt.plot(x2, y2)
 
@@ -34,12 +36,10 @@ def plot_simulation(x1, y1, dest_name, xlabel, ylabel, x2=None, y2=None,
 
     plt.savefig(dest_name)
     plt.close()
-#    plt.show()
 
 
 def question_three():
-    print("in q 3")
-    # Q3 | BSC, where p = 0.001 and p = 0.01
+    """ Q3 | BSC, where p = 0.001 and p = 0.01 """
     p_ten = 0.01
     p_ten_container = []
     p_hund = 0.001
@@ -52,7 +52,6 @@ def question_three():
         n = data + 100
         check_bits = ceil(.1 * n)
         k = n + check_bits
-#        print(check_bits,data, n, k)
         p_ten_container.append(
             bsc_simulation.simulate(10**6, p_ten, data, check_bits))
 
@@ -64,7 +63,6 @@ def question_three():
         p_hund_container.append(
             bsc_simulation.simulate(10**6, p_hund, data, check_bits))
 
-#    print(p_hund_container)
     plot_simulation(user_data, p_ten_container,
                     dest_name="img/q3.png", xlabel="u", ylabel="Average Efficiency",
                     line1_label="p=0.01", line2_label="p=0.001",
@@ -72,7 +70,7 @@ def question_three():
 
 
 def question_four():
-    # Q4 | Plot BSC with varying effs
+    """ Q4 | Plot BSC with varying efficiencies """
     u = 512
     p_min = 0.0001
     p_max = 0.01
@@ -86,7 +84,7 @@ def question_four():
                     xlabel='p', ylabel='Average Efficiency')
 
 def question_five():
-    # Q5 | Two State Simulation
+    """ Q5 | Two State Simulation """
     pg = (10)**(-5)
     pb = (1.99)*(10**-3)
     user_data = 1024
