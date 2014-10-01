@@ -1,7 +1,8 @@
 #!/Users/dtg/Dropbox/UC_2014/S2/264/env/bin/python
 
 '''
-Simulates a BSC, modelled using a binomial distribution.
+Authors:    Dillon George and Carl Kenny
+Program:    Simulates a BSC, modelled using a binomial distribution.
 '''
 
 import hamming
@@ -45,9 +46,7 @@ def simulate(num_simulations, error_rate, user_data, redundant_bits):
 
 
 def prob_sim(prob_min, prob_max, prob_step, num_sims, user_data):
-    '''
-    Perform multiple simulations.
-    '''
+    ''' Perform multiple simulations '''
     avg_efficiencies = []
     error_rates = np.arange(prob_min, prob_max, prob_step)
 
@@ -59,7 +58,6 @@ def prob_sim(prob_min, prob_max, prob_step, num_sims, user_data):
                                          user_data, redundant_bits))
 
 
-#    print(len(avg_efficiencies), len(error_rates))
     return error_rates, avg_efficiencies
 
 
