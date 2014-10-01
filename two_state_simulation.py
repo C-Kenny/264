@@ -1,7 +1,8 @@
 #!/Users/dtg/Dropbox/UC_2014/S2/264/env/bin/python
 
 '''
-Simulates a 2-State channel, modelled using a binomial distribution.
+Authors:    Dillon George and Carl Kenny
+Program:    Simulates a 2-State channel, modelled using a binomial distribution.
 '''
 
 import hamming
@@ -18,15 +19,18 @@ def average_efficiency(efficiencies):
 
 
 def get_state(previous_state_good):
-
+    """ 
+    Returns new state which is determined by previous state and
+    bit-error rates listed in the assignment brief
+    """
+    
     new_state = None
 
     p_gg = 0.9
     p_bb = 0.9
 
-    # Gen random number
-    random_number = numpy.random.uniform()  # q
-
+    # Generate random number (q)
+    random_number = numpy.random.uniform()
 
     if previous_state_good:
         if random_number >= p_gg:
@@ -43,7 +47,7 @@ def get_state(previous_state_good):
 
 
 def get_error_rate(current_state_good, error_rate_g, error_rate_b):
-
+    """ Return error rate, determined by current state """
     if current_state_good:
         error_rate = error_rate_g
     else:
@@ -109,7 +113,6 @@ def simulate(num_simulations, error_rate_g, error_rate_b,
         total_submissions += num_transmissions
 
     print(numpy.average(runs))
-#    print(total_submissions)
     return numpy.average(efficiencies)
 
 
@@ -123,6 +126,7 @@ if __name__ == "__main__":
     '''
     overhead = 100
     num_simulations = 10
+    
     # Get simulation Parameters
     if len(argv) > 1:
         user_data = int(argv[argv.index("-u") + 1])
